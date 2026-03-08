@@ -1,42 +1,27 @@
-name: Run Playwright Tests Daily
-
+name: Playwright Tests
 on:
-  schedule:
-    - cron: '0 0 * * *'  # This is 7:30 PM NPT (1:45 PM UTC)
-  workflow_dispatch: 
-
-
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 jobs:
   test:
-    runs-on: ubuntu-latest  
-
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
     steps:
-    # Step 1: Checkout the repository to get the code
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    # Step 2: Set up Node.js version 24.11.1
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
       with:
-        node-version: '24.11.1'
-
-    # Step 3: Install project dependencies 
+        node-version: lts/*
     - name: Install dependencies
-      run: npm install
-
-    # Step 4: Install Playwright and browsers
-    - name: Install Playwright
-      run: npm install playwright
-
-    # Step 5: Run Playwright tests
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
-
-    # Step 6: Upload test results 
-    - name: Upload test results
-      if: always()  
-      uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
       with:
-        name: playwright-test-results
-        path: ./test-results  
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
