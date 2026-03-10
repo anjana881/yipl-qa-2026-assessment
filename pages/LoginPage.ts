@@ -5,9 +5,9 @@ const path = require('path');
 
 
 export class LoginPage {
-  private page: Page;
-  private emailInput: Locator;
-  private passwordInput: Locator;
+   private page: Page;
+   private emailInput: Locator;
+   private passwordInput: Locator;
   private loginButton: Locator;
     formHelper: FormHelper;
 

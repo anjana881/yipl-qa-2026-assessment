@@ -15,8 +15,11 @@ test.describe.parallel('Note Functionality', () => {
  
     const notePage = new NotePage(page);
     await notePage.createNote();
+    await page.waitForTimeout(2000); // Wait for 2 seconds to ensure the note is created
     await notePage.updateNote();
+     await page.waitForTimeout(2000);
     await notePage.deleteNote();
+    await expect(page.locator(".my-2.mb-4")).toHaveText("You don't have any notes in all categories");
 
   
 
